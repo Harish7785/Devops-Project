@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven 3.8.6' // This should match the name you configured
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+    }
+}
+node {
+    def mvnHome = tool name: 'Maven 3.8.6', type: 'maven' // This should match the name you configured
+    withEnv(["M2_HOME=${mvnHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
+        stage('Build') {
+            sh 'mvn clean install'
+        }
+    }
+}
